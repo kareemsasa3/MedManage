@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddressMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MedManage</a> &gt; <a href="index.source.html" class="el_package">com.sasa.medmanage.mapper</a> &gt; <span class="el_source">AddressMapper.java</span></div><h1>AddressMapper.java</h1><pre class="source lang-java linenums">package com.sasa.medmanage.mapper;
+
+import com.sasa.medmanage.constant.Constants;
+import com.sasa.medmanage.dto.AddressDTO;
+import com.sasa.medmanage.entity.Address;
+import com.sasa.medmanage.entity.AddressType;
+import com.sasa.medmanage.exception.InvalidEnumValueException;
+
+public final class AddressMapper {
+
+<span class="nc" id="L11">    private AddressMapper() {</span>
+<span class="nc" id="L12">        throw new AssertionError(&quot;Cannot instantiate utility class&quot;);</span>
+    }
+
+    public static AddressDTO toDTO(Address address) {
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">        if (address == null) {</span>
+<span class="nc" id="L17">            return null; // Handle null addresses gracefully</span>
+        }
+        
+<span class="fc" id="L20">        AddressDTO dto = new AddressDTO();</span>
+<span class="fc" id="L21">        dto.setId(address.getId());</span>
+<span class="fc" id="L22">        dto.setStreetAddress(address.getStreetAddress());</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        dto.setAddressType(address.getAddressType() != null ? address.getAddressType().name() : null);</span>
+<span class="fc" id="L24">        dto.setCity(address.getCity());</span>
+<span class="fc" id="L25">        dto.setState(address.getState());</span>
+<span class="fc" id="L26">        dto.setPostalCode(address.getPostalCode());</span>
+<span class="fc" id="L27">        return dto;</span>
+    }
+
+    public static Address toEntity(AddressDTO dto) {
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (dto == null) {</span>
+<span class="nc" id="L32">            return null; // Handle null DTOs gracefully</span>
+        }
+        
+<span class="fc" id="L35">        Address address = new Address();</span>
+<span class="fc" id="L36">        address.setId(dto.getId());</span>
+<span class="fc" id="L37">        address.setStreetAddress(dto.getStreetAddress());</span>
+<span class="fc" id="L38">        address.setAddressType(convertStringToEnum(AddressType.class, dto.getAddressType()));</span>
+<span class="fc" id="L39">        address.setCity(dto.getCity());</span>
+<span class="fc" id="L40">        address.setState(dto.getState());</span>
+<span class="fc" id="L41">        address.setPostalCode(dto.getPostalCode());</span>
+<span class="fc" id="L42">        return address;</span>
+    }
+
+    private static &lt;T extends Enum&lt;T&gt;&gt; T convertStringToEnum(Class&lt;T&gt; enumType, String type) {
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (type == null) {</span>
+<span class="nc" id="L47">            throw new IllegalArgumentException(&quot;Enum value cannot be null&quot;); // Handle null type</span>
+        }
+        try {
+<span class="fc" id="L50">            return Enum.valueOf(enumType, type.toUpperCase());</span>
+<span class="nc" id="L51">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L52">            throw new InvalidEnumValueException(</span>
+<span class="nc" id="L53">                String.format(Constants.INVALID_ENUM_VALUE_MESSAGE));</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddressController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MedManage</a> &gt; <a href="index.source.html" class="el_package">com.sasa.medmanage.controller</a> &gt; <span class="el_source">AddressController.java</span></div><h1>AddressController.java</h1><pre class="source lang-java linenums">package com.sasa.medmanage.controller;
+
+import com.sasa.medmanage.dto.AddressDTO;
+import com.sasa.medmanage.service.AddressServiceInterface;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/addresses&quot;)
+public class AddressController {
+
+    private final AddressServiceInterface addressService;
+
+<span class="nc" id="L17">    public AddressController(AddressServiceInterface addressService) {</span>
+<span class="nc" id="L18">        this.addressService = addressService;</span>
+<span class="nc" id="L19">    }</span>
+
+    @GetMapping
+    public ResponseEntity&lt;List&lt;AddressDTO&gt;&gt; getAllAddresses() {
+<span class="nc" id="L23">        List&lt;AddressDTO&gt; addresses = addressService.getAllAddresses();</span>
+<span class="nc" id="L24">        return ResponseEntity.ok(addresses);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;AddressDTO&gt; getAddressById(@PathVariable Long id) {
+<span class="nc" id="L29">        AddressDTO address = addressService.getAddressById(id);</span>
+<span class="nc" id="L30">        return ResponseEntity.ok(address);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;AddressDTO&gt; createAddress(@RequestBody AddressDTO addressDTO) {
+<span class="nc" id="L35">        AddressDTO createdAddress = addressService.createAddress(addressDTO);</span>
+<span class="nc" id="L36">        return ResponseEntity.status(201).body(createdAddress); // 201 Created</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;AddressDTO&gt; updateAddress(@PathVariable Long id, @RequestBody AddressDTO addressDTO) {
+<span class="nc" id="L41">        AddressDTO updatedAddress = addressService.updateAddress(id, addressDTO);</span>
+<span class="nc" id="L42">        return ResponseEntity.ok(updatedAddress);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteAddress(@PathVariable Long id) {
+<span class="nc" id="L47">        addressService.deleteAddress(id);</span>
+<span class="nc" id="L48">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

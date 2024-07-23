@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MedManage</a> &gt; <a href="index.source.html" class="el_package">com.sasa.medmanage.controller</a> &gt; <span class="el_source">PatientController.java</span></div><h1>PatientController.java</h1><pre class="source lang-java linenums">package com.sasa.medmanage.controller;
+
+import com.sasa.medmanage.dto.PatientDTO;
+import com.sasa.medmanage.service.PatientServiceInterface;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/patients&quot;)
+public class PatientController {
+
+    private final PatientServiceInterface patientService;
+
+<span class="nc" id="L17">    public PatientController(PatientServiceInterface patientService) {</span>
+<span class="nc" id="L18">        this.patientService = patientService;</span>
+<span class="nc" id="L19">    }</span>
+
+    @GetMapping
+    public ResponseEntity&lt;List&lt;PatientDTO&gt;&gt; getAllPatients() {
+<span class="nc" id="L23">        List&lt;PatientDTO&gt; patients = patientService.getAllPatients();</span>
+<span class="nc" id="L24">        return ResponseEntity.ok(patients);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;PatientDTO&gt; getPatientById(@PathVariable Long id) {
+<span class="nc" id="L29">        PatientDTO patient = patientService.getPatientById(id);</span>
+<span class="nc" id="L30">        return ResponseEntity.ok(patient);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;PatientDTO&gt; createPatient(@RequestBody PatientDTO patientDTO) {
+<span class="nc" id="L35">        PatientDTO createdPatient = patientService.createPatient(patientDTO);</span>
+<span class="nc" id="L36">        return ResponseEntity.ok(createdPatient);</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;PatientDTO&gt; updatePatient(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+<span class="nc" id="L41">        PatientDTO updatedPatient = patientService.updatePatient(id, patientDTO);</span>
+<span class="nc" id="L42">        return ResponseEntity.ok(updatedPatient);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deletePatient(@PathVariable Long id) {
+<span class="nc" id="L47">        patientService.deletePatient(id);</span>
+<span class="nc" id="L48">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @GetMapping(&quot;/{id}/age&quot;)
+    public ResponseEntity&lt;Integer&gt; getPatientAge(@PathVariable Long id) {
+<span class="nc" id="L53">        int age = patientService.getPatientAge(id);</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(age);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

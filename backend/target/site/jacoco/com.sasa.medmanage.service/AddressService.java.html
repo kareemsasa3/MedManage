@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddressService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MedManage</a> &gt; <a href="index.source.html" class="el_package">com.sasa.medmanage.service</a> &gt; <span class="el_source">AddressService.java</span></div><h1>AddressService.java</h1><pre class="source lang-java linenums">package com.sasa.medmanage.service;
+
+import com.sasa.medmanage.constant.Constants;
+import com.sasa.medmanage.dto.AddressDTO;
+import com.sasa.medmanage.entity.Address;
+import com.sasa.medmanage.entity.AddressType;
+import com.sasa.medmanage.exception.InvalidEnumValueException;
+import com.sasa.medmanage.exception.ResourceNotFoundException;
+import com.sasa.medmanage.mapper.AddressMapper;
+import com.sasa.medmanage.repository.AddressRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class AddressService implements AddressServiceInterface {
+
+    private final AddressRepository addressRepository;
+    
+
+<span class="fc" id="L24">    public AddressService(AddressRepository addressRepository) {</span>
+<span class="fc" id="L25">        this.addressRepository = addressRepository;</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;AddressDTO&gt; getAllAddresses() {
+<span class="fc" id="L31">        return addressRepository.findAll().stream()</span>
+<span class="fc" id="L32">                .map(AddressMapper::toDTO)</span>
+<span class="fc" id="L33">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AddressDTO getAddressById(Long id) {
+<span class="fc" id="L39">        Address address = addressRepository.findById(id)</span>
+<span class="fc" id="L40">                .orElseThrow(() -&gt; new ResourceNotFoundException(Constants.ADDRESS_NOT_FOUND_MESSAGE + id));</span>
+<span class="fc" id="L41">        return AddressMapper.toDTO(address);</span>
+    }
+
+    @Override
+    @Transactional
+    public AddressDTO createAddress(AddressDTO addressDTO) {
+<span class="fc" id="L47">        Address address = AddressMapper.toEntity(addressDTO);</span>
+<span class="fc" id="L48">        Address createdAddress = addressRepository.save(address);</span>
+<span class="fc" id="L49">        return AddressMapper.toDTO(createdAddress);</span>
+    }
+
+    @Override
+    @Transactional
+    public AddressDTO updateAddress(Long id, AddressDTO addressDTO) {
+<span class="fc" id="L55">        Address existingAddress = addressRepository.findById(id)</span>
+<span class="pc" id="L56">                .orElseThrow(() -&gt; new ResourceNotFoundException(Constants.ADDRESS_NOT_FOUND_MESSAGE + id));</span>
+        
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (addressDTO.getStreetAddress() != null) {</span>
+<span class="nc" id="L59">            existingAddress.setStreetAddress(addressDTO.getStreetAddress());</span>
+        }
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (addressDTO.getAddressType() != null) {</span>
+<span class="fc" id="L62">            existingAddress.setAddressType(convertStringToEnum(AddressType.class, addressDTO.getAddressType()));</span>
+        }
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (addressDTO.getCity() != null) {</span>
+<span class="nc" id="L65">            existingAddress.setCity(addressDTO.getCity());</span>
+        }
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (addressDTO.getState() != null) {</span>
+<span class="nc" id="L68">            existingAddress.setState(addressDTO.getState());</span>
+        }
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (addressDTO.getPostalCode() != null) {</span>
+<span class="nc" id="L71">            existingAddress.setPostalCode(addressDTO.getPostalCode());</span>
+        }
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (addressDTO.getFirstName() != null) {</span>
+<span class="nc" id="L74">            existingAddress.setFirstName(addressDTO.getFirstName());</span>
+        }
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (addressDTO.getLastName() != null) {</span>
+<span class="nc" id="L77">            existingAddress.setLastName(addressDTO.getLastName());</span>
+        }
+
+<span class="fc" id="L80">        Address updatedAddress = addressRepository.save(existingAddress);</span>
+<span class="fc" id="L81">        return AddressMapper.toDTO(updatedAddress);</span>
+    }
+
+    @Override
+    @Transactional
+    public void deleteAddress(Long id) {
+<span class="fc" id="L87">        Address address = addressRepository.findById(id)</span>
+<span class="pc" id="L88">                .orElseThrow(() -&gt; new ResourceNotFoundException(Constants.ADDRESS_NOT_FOUND_MESSAGE + id));</span>
+<span class="fc" id="L89">        addressRepository.delete(address);</span>
+<span class="fc" id="L90">    }</span>
+
+    private &lt;T extends Enum&lt;T&gt;&gt; T convertStringToEnum(Class&lt;T&gt; enumType, String type) {
+        try {
+<span class="fc" id="L94">            return Enum.valueOf(enumType, type.toUpperCase());</span>
+<span class="nc" id="L95">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L96">            throw new InvalidEnumValueException(</span>
+<span class="nc" id="L97">                String.format(Constants.INVALID_ENUM_VALUE_MESSAGE, type, enumType.getSimpleName()));</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
